@@ -1,0 +1,36 @@
+name: Watch booking slot
+
+on:
+  schedule:
+    - cron: "*/1 * * * *"   # 1分おき
+  workflow_dispatch: {}
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Cache state
+        uses: actions/cache@v4
+        with:
+          path: state.json
+          key: state-cache
+          restore-keys: state-cache
+
+      - name: Run watcher
+        env:
+          TARGET_URL: ${{ secrets.TARGET_URL }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          python watch.py
