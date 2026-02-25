@@ -2,7 +2,7 @@ name: Watch booking slot
 
 on:
   schedule:
-    - cron: "*/1 * * * *"   # 1分おき
+    - cron: "*/5 * * * *"   # 5分おき
   workflow_dispatch: {}
 
 jobs:
